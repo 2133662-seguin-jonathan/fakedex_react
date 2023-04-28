@@ -1,0 +1,33 @@
+.formContainer {
+    background-color: rgba(171, 171, 171, 0.81)!important;
+    border-radius: 15px!important;
+    padding-top: 2vh!important;
+    padding-bottom: 2vh!important;
+    margin: 1rem;
+}
+
+.formFakemonContainer {
+    background-color: rgba(171, 171, 171, 0.81)!important;
+    border-radius: 15px!important;
+    padding-top: 2vh!important;
+    padding-bottom: 2vh!important;
+    margin: 1rem;
+    max-height: 90vh;
+    min-height: 90vh;
+}
+
+.listContainer {
+    background-color: rgba(171, 171, 171, 0.81)!important;
+    border-radius: 15px!important;
+    padding-top: 2vh!important;
+    padding-bottom: 2vh!important;
+    padding-left: 1vw !important;
+    padding-right: 1vw !important;
+}
+
+#container {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
