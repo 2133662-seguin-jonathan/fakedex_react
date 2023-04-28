@@ -11,36 +11,36 @@
 }
 
 .stats {
-    margin-top: 2.5vh;
-    margin-bottom: 2.5vh;
-    margin-left: 2vw;
-    margin-right: 2vw;
+    margin-top: 2.5vh!important;
+    margin-bottom: 2.5vh!important;
+    margin-left: 2vw!important;
+    margin-right: 2vw!important;
 }
 
 
 .stats-fin {
-    margin-bottom: 5vh;
+    margin-bottom: 5vh!important;
 }
 
 .stats-debut {
-    margin-top: 5vh;
+    margin-top: 5vh!important;
 }
 
 #description{
-    text-align: justify;
+    text-align: justify!important;
 }
 
 .nomFakemon {
-    margin: 1rem;
+    margin: 1rem!important;
 }
 
 .type{
-    margin-top: 2.5vh;
-    margin-bottom: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-top: 2.5vh!important;
+    margin-bottom: 1rem!important;
+    margin-left: 1rem!important;
+    margin-right: 1rem!important;
 }
 
 .boutonFormFakemon {
-    margin: 1rem;
+    margin: 1rem!important;
 }
