@@ -1,26 +1,17 @@
-.fakemonListItem :hover {
-    background-color: azure !important;
-    border-radius: 5px !important;
-}
+
 
 .fakemonListItem {
     background-color: rgb(148, 160, 208) !important;
     margin-top: 1vh;
     margin-bottom: 1vh;
     border-radius: 5px !important;
-    width: 20vw !important;
-    margin-left: 7.5vw;
-}
+    align-items: center;
+    padding-left: 15vw;
 
-
-.textListFakemon,span{
-    font-weight: bold !important;
-    text-align: center;
-    font-size: large !important;
 }
 
 #fakemonList {
-    max-Height: 35vh;
+    max-Height: 20vh;
     overflow: auto;
     padding: 1rem;
     margin-left: 1vw;
@@ -32,6 +23,12 @@
     height: fit-content;
 }
 
-.iconListFakemon :hover {
-    border-radius: 100px !important;
+
+#titreListe {
+    padding-left: 13.5vw;
+    text-align: center;
+}
+
+.boutonListe {
+    margin: 1rem!important;
 }

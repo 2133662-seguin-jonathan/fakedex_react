@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL: "http://fakedex.loc",
-})
+    baseURL: "http://fakedex.loc"
+});

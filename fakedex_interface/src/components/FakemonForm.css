@@ -11,19 +11,19 @@
 }
 
 .stats {
-    margin-top: 2.5vh!important;
-    margin-bottom: 2.5vh!important;
+    margin-top: 1vh!important;
+    margin-bottom: 3vh!important;
     margin-left: 2vw!important;
     margin-right: 2vw!important;
 }
 
 
 .stats-fin {
-    margin-bottom: 5vh!important;
+    margin-bottom: 2vh!important;
 }
 
 .stats-debut {
-    margin-top: 5vh!important;
+    margin-top: 2vh!important;
 }
 
 #description{
@@ -42,5 +42,6 @@
 }
 
 .boutonFormFakemon {
-    margin: 1rem!important;
+    margin-left: 1rem!important;
+    margin-right: 1rem!important;
 }
