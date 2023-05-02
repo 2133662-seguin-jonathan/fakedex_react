@@ -13,30 +13,30 @@ class MainContainer extends Component {
         super(props);
         this.state = {
             apikey: "Elle va être ici",
-            isLoaded:false,
+            isLoaded: false,
             etatAlerte: false,
-            typeAlerte:"error",
-            messageAlerte:"Test",
-            listeFakemon:[],
-            fakemonSelection:{
-                "id":0,
-                "nom":" ",
-                "id_type1":1,
-                "id_type2":1,
-                "hp":0,
-                "atk":0,
-                "def":0,
-                "sp_atk":0,
-                "sp_def":0,
-                "speed":0,
-                "description":" ",
+            typeAlerte: "error",
+            messageAlerte: "Test",
+            listeFakemon: [],
+            fakemonSelection: {
+                "id": 0,
+                "nom": " ",
+                "id_type1": 1,
+                "id_type2": 1,
+                "hp": 0,
+                "atk": 0,
+                "def": 0,
+                "sp_atk": 0,
+                "sp_def": 0,
+                "speed": 0,
+                "description": " ",
                 "id_usager": 0
             },
             listeType: {
-                "id":1,
-                "nom":"Aucun"
+                "id": 1,
+                "nom": "Aucun"
             },
-            typeCharger:false
+            typeCharger: false
         };
         this.fermerAlerte = this.fermerAlerte.bind(this);
         this.envoyerAlerte = this.envoyerAlerte.bind(this);
@@ -46,25 +46,25 @@ class MainContainer extends Component {
         this.miseAjourSelection = this.miseAjourSelection.bind(this);
     }
 
-    miseAjourSelection(fakemonVar){
+    miseAjourSelection(fakemonVar) {
         let fakemon = fakemonVar;
         this.setState({
             fakemonSelection: fakemon,
-            isLoaded:false,
-            typeCharger:false
+            isLoaded: false,
+            typeCharger: false
         });
         api({
             method: 'GET',
             url: '/type',
             headers: {
-                Authorization: "apikey "+this.state.apikey
+                Authorization: "apikey " + this.state.apikey
             }
         })
             .then((resultat) => {
                 this.setState({
                     isLoaded: true,
                     listeType: resultat.data["data"],
-                    typeCharger:true
+                    typeCharger: true
                 });
                 this.envoyerAlerte("success", "Vous pouvez éditez le fakemon maintenant.");
             })
@@ -108,18 +108,18 @@ class MainContainer extends Component {
         this.setState({
             apikey: apiKey,
             isLoaded: true,
-            fakemonSelection:{
-                "id":0,
-                "nom":" ",
-                "id_type1":1,
-                "id_type2":1,
-                "hp":0,
-                "atk":0,
-                "def":0,
-                "sp_atk":0,
-                "sp_def":0,
-                "speed":0,
-                "description":" ",
+            fakemonSelection: {
+                "id": 0,
+                "nom": " ",
+                "id_type1": 1,
+                "id_type2": 1,
+                "hp": 0,
+                "atk": 0,
+                "def": 0,
+                "sp_atk": 0,
+                "sp_def": 0,
+                "speed": 0,
+                "description": " ",
                 "id_usager": 0
             }
         });
@@ -128,7 +128,7 @@ class MainContainer extends Component {
     chercherListeFakemon(listeFakemon) {
         this.setState({
             listeFakemon: listeFakemon,
-            typeCharger:false
+            typeCharger: false
         });
     }
 
@@ -145,57 +145,111 @@ class MainContainer extends Component {
         });
     }
 
+    modifierFakemon = (fakemon) => {
+        this.setState({
+            isLoaded: false
+        });
+        api({
+            method: 'PUT',
+            url: '/fakemon/' + fakemon["id"],
+            headers: {
+                Authorization: "apikey " + this.state.apikey
+            },
+            data: {
+                "nom": fakemon["nom"],
+                "id_type1": fakemon["id_type1"],
+                "id_type2": fakemon["id_type2"],
+                "hp": fakemon["hp"],
+                "atk": fakemon["atk"],
+                "def": fakemon["def"],
+                "sp_atk": fakemon["sp_atk"],
+                "sp_def": fakemon["sp_def"],
+                "speed": fakemon["speed"],
+                "description": fakemon["description"]
+            }
+        })
+            .then((resultat) => {
+                let listeFakemon = this.state.listeFakemon;
+                for (let index = 0; index < listeFakemon.length; index++) {
+                    if (listeFakemon[index]["id"] === fakemon["id"]) {
+                        listeFakemon[index] = fakemon;
+                    }
+                }
+                this.setState({
+                    listeFakemon: listeFakemon,
+                    isLoaded: true,
+                    fakemonSelection: resultat.data,
+                });
+                this.envoyerAlerte("success", "La modification du fakemon a été réussi.");
+            })
+            .catch((error) => {
+                if (error.response) {
+                    const dataError = error.response;
+                    if (dataError.status === 401) {
+                        this.envoyerAlerte("error", "Une erreur imprévue a survenu lors de la modification du fakemon.");
+                    }
+                    else if (dataError.status === 403) {
+                        this.envoyerAlerte("error", "Il y a eu une erreur lors de l'envoi de la clé api lors de la modification du fakemon.");
+                    }
+                    else if (dataError.status === 500) {
+                        this.envoyerAlerte("error", "Il y a eu un problème de communication avec l'api lors de la modification du fakemon. Veuillez réessayer plus tard.");
+                    }
+                }
+            })
+
+    }
+
     render() {
         let formulaireFakemon = [<p key={0}>&nbsp;</p>];
         let listeFakemon = [<p key={0}>&nbsp;</p>];
-        if (this.state.isLoaded){
-            formulaireFakemon = [<FakemonForm key={1} fakemon={this.state.fakemonSelection} cleCharger={this.state.typeCharger} listeType={this.state.listeType} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey}/>];
-            listeFakemon = [<ListeFakemon key={1} cleCharger={this.state.isLoaded} chercherListeFakemon={this.chercherListeFakemon} listeFakemon={this.state.listeFakemon} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} miseAjourSelection={this.miseAjourSelection}/>]
+        if (this.state.isLoaded) {
+            formulaireFakemon = [<FakemonForm key={1} modifierFakemon={this.modifierFakemon} fakemon={this.state.fakemonSelection} cleCharger={this.state.typeCharger} listeType={this.state.listeType} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} />];
+            listeFakemon = [<ListeFakemon key={1}  cleCharger={this.state.isLoaded} chercherListeFakemon={this.chercherListeFakemon} listeFakemon={this.state.listeFakemon} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} miseAjourSelection={this.miseAjourSelection} />]
         }
-        else{
+        else {
             formulaireFakemon = [<p key={0}>&nbsp;</p>];
             listeFakemon = [<p key={0}>&nbsp;</p>];
         }
-            return (
-                <div id="container">
-                    <Collapse in={this.state.etatAlerte}>
-                        <Alert
-                            action={
-                                <IconButton
-                                    aria-label="close"
-                                    color="inherit"
-                                    size="small"
-                                    onClick={() => {
-                                        this.fermerAlerte();
-                                    }}
-                                >
-                                    <Close fontSize="inherit" />
-                                </IconButton>
-                            }
-                            sx={{ mb: 2 }}
-                            severity={this.state.typeAlerte}
-                        >
-                            {this.state.messageAlerte}
-                        </Alert>
-                    </Collapse>
-                    <Grid container columnSpacing={2} >
-                        <Grid xs={5} rowSpacing={2} item>
-                            <Paper elevation={10} className={"formContainer"}>
-                                <LoginForm apikey={this.state.apikey} changerApiKey={this.changerApiKey} envoyerAlerte={this.envoyerAlerte} nouvCle={this.rechargementCle} />
-                            </Paper>
-                            <Paper elevation={10} className={"listContainer"}>
-                                {listeFakemon}
-                            </Paper>
-                        </Grid>
-                        <Grid xs={6} item >
-                            <Paper elevation={10} className={"formFakemonContainer"}>
-                                {formulaireFakemon}
-                            </Paper>
-                        </Grid>
-                    </Grid>
-                </div>
-            );
+        return (
+            <div id="container">
+                <Collapse in={this.state.etatAlerte}>
+                    <Alert
+                        action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    this.fermerAlerte();
+                                }}
+                            >
+                                <Close fontSize="inherit" />
+                            </IconButton>
                         }
+                        sx={{ mb: 2 }}
+                        severity={this.state.typeAlerte}
+                    >
+                        {this.state.messageAlerte}
+                    </Alert>
+                </Collapse>
+                <Grid container columnSpacing={2} >
+                    <Grid xs={5} rowSpacing={2} item>
+                        <Paper elevation={10} className={"formContainer"}>
+                            <LoginForm apikey={this.state.apikey} changerApiKey={this.changerApiKey} envoyerAlerte={this.envoyerAlerte} nouvCle={this.rechargementCle} />
+                        </Paper>
+                        <Paper elevation={10} className={"listContainer"}>
+                            {listeFakemon}
+                        </Paper>
+                    </Grid>
+                    <Grid xs={6} item >
+                        <Paper elevation={10} className={"formFakemonContainer"}>
+                            {formulaireFakemon}
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </div>
+        );
+    }
 }
 
 export default MainContainer;
