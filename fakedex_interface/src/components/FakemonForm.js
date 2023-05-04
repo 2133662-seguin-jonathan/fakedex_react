@@ -167,9 +167,11 @@ class FakemonForm extends Component {
     genererNomAleatoire = (e) => {
         e.preventDefault();
         let fakemon = this.state.fakemon;
+        let rng = (Math.floor(Math.random()*4)+1);
+        console.log(rng)
         apiNomFakemon({
             method: 'GET',
-            url: '/name/generate?category=pokemon'
+            url: '/name/generate?category=pokemon&limit='+ rng
         })
             .then((resultat) => {
                 fakemon["nom"] =  resultat.data["contents"]["names"][0];
@@ -184,7 +186,7 @@ class FakemonForm extends Component {
                         this.props.envoyerAlerte("error", "Une erreur imprévue a survenu lors de la génération du nom");
                     }
                     if (dataError.status === 429) {
-                        this.props.envoyerAlerte("error", "Vous avez dépasser le nombre d'essai de 5/24h offert par l'api: https://fungenerators.com/api/namegen/");
+                        this.props.envoyerAlerte("error", "Vous avez dépasser le nombre d'essai de 5/h offert par l'api: https://fungenerators.com/api/namegen/");
                     }
                 }
             })
