@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Paper, Grid, Alert, Collapse, IconButton } from '@mui/material';
+import { Paper, Grid, Alert, Collapse, IconButton, CircularProgress } from '@mui/material';
 import LoginForm from './LoginForm';
 import ListeFakemon from './ListeFakemon';
 import FakemonForm from './FakemonForm';
@@ -136,13 +136,51 @@ class MainContainer extends Component {
         this.setState({
             isLoaded: false
         });
-        let listeFakemon = this.state.listeFakemon;
-        listeFakemon = [...listeFakemon, fakemonNouv];
-        this.setState({
-            listeFakemon: listeFakemon,
-            isLoaded: true,
-            fakemonSelection: fakemonNouv,
-        });
+        api({
+            method: 'POST',
+            url: '/fakemon',
+            headers: {
+                Authorization: "apikey " + this.state.apikey
+            },
+            data: {
+                "nom": fakemonNouv["nom"],
+                "id_type1": fakemonNouv["id_type1"],
+                "id_type2": fakemonNouv["id_type2"],
+                "hp": fakemonNouv["hp"],
+                "atk": fakemonNouv["atk"],
+                "def": fakemonNouv["def"],
+                "sp_atk": fakemonNouv["sp_atk"],
+                "sp_def": fakemonNouv["sp_def"],
+                "speed": fakemonNouv["speed"],
+                "description": fakemonNouv["description"]
+            }
+        })
+            .then((resultat) => {
+                let listeFakemon = this.state.listeFakemon;
+                listeFakemon = [...listeFakemon, fakemonNouv];
+                this.setState({
+                    listeFakemon: listeFakemon,
+                    isLoaded: true,
+                    fakemonSelection: fakemonNouv,
+                });
+                this.envoyerAlerte("success", "L'ajout du fakemon a été réussi.");
+
+            })
+            .catch((error) => {
+                if (error.response) {
+                    const dataError = error.response;
+                    if (dataError.status === 401) {
+                        this.envoyerAlerte("error", "Une erreur imprévue a survenu lors de l'ajout du fakemon.");
+                    }
+                    else if (dataError.status === 403) {
+                        this.envoyerAlerte("error", "Il y a eu une erreur lors de l'envoi de la clé api lors de l'ajout du fakemon.");
+                    }
+                    else if (dataError.status === 500) {
+                        this.envoyerAlerte("error", "Il y a eu un problème de communication avec l'api lors de l'ajout du fakemon. Veuillez réessayer plus tard.");
+                    }
+                }
+            })
+
     }
 
     modifierFakemon = (fakemon) => {
@@ -199,16 +237,83 @@ class MainContainer extends Component {
 
     }
 
-    render() {
-        let formulaireFakemon = [<p key={0}>&nbsp;</p>];
-        let listeFakemon = [<p key={0}>&nbsp;</p>];
-        if (this.state.isLoaded) {
-            formulaireFakemon = [<FakemonForm key={1} modifierFakemon={this.modifierFakemon} fakemon={this.state.fakemonSelection} cleCharger={this.state.typeCharger} listeType={this.state.listeType} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} />];
-            listeFakemon = [<ListeFakemon key={1}  cleCharger={this.state.isLoaded} chercherListeFakemon={this.chercherListeFakemon} listeFakemon={this.state.listeFakemon} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} miseAjourSelection={this.miseAjourSelection} />]
+    supprimerFakemon = (fakemon) => {
+        let existe = false;
+        for (let index = 0; index < this.state.listeFakemon.length; index++) {
+            if (this.state.listeFakemon[index]["id"] === fakemon["id"]) {
+                existe = true;
+            }
+        }
+        if (existe) {
+            this.setState({
+                isLoaded: false
+            });
+            api({
+                method: 'DELETE',
+                url: '/fakemon/' + fakemon["id"],
+                headers: {
+                    Authorization: "apikey " + this.state.apikey
+                }
+            })
+                .then((resultat) => {
+                    let listeFakemon = [];
+                    for (let index = 0; index < this.state.listeFakemon.length; index++) {
+                        if (this.state.listeFakemon[index]["id"] !== fakemon["id"]) {
+                            listeFakemon = [...listeFakemon, this.state.listeFakemon[index]];
+                        }
+                    }
+                    this.setState({
+                        listeFakemon: listeFakemon,
+                        isLoaded: true,
+                        fakemonSelection: {
+                            "id": 0,
+                            "nom": " ",
+                            "id_type1": 1,
+                            "id_type2": 1,
+                            "hp": 0,
+                            "atk": 0,
+                            "def": 0,
+                            "sp_atk": 0,
+                            "sp_def": 0,
+                            "speed": 0,
+                            "description": " ",
+                            "id_usager": 0
+                        }
+                    });
+                    this.envoyerAlerte("success", "La supression du fakemon a été réussi.");
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        const dataError = error.response;
+                        if (dataError.status === 401) {
+                            this.envoyerAlerte("error", "Une erreur imprévue a survenu lors de la suppression du fakemon.");
+                        }
+                        else if (dataError.status === 403) {
+                            this.envoyerAlerte("error", "Il y a eu une erreur lors de l'envoi de la clé api lors de la suppression du fakemon.");
+                        }
+                        else if (dataError.status === 500) {
+                            this.envoyerAlerte("error", "Il y a eu un problème de communication avec l'api lors de la suppression du fakemon. Veuillez réessayer plus tard.");
+                        }
+                    }
+                })
         }
         else {
-            formulaireFakemon = [<p key={0}>&nbsp;</p>];
-            listeFakemon = [<p key={0}>&nbsp;</p>];
+            this.envoyerAlerte("warning", "Le fakemon n'existe pas dans votre liste.");
+        }
+
+
+    }
+
+    render() {
+        let formulaireFakemon = [<CircularProgress key={0}/>];
+        let listeFakemon = [<CircularProgress key={0}/>];
+        if (this.state.isLoaded) {
+            formulaireFakemon = [<FakemonForm key={1} ajoutFakemon={this.ajoutFakemon} supprimerFakemon={this.supprimerFakemon} modifierFakemon={this.modifierFakemon} fakemon={this.state.fakemonSelection} cleCharger={this.state.typeCharger} listeType={this.state.listeType} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} />];
+            listeFakemon = [<ListeFakemon key={1} cleCharger={this.state.isLoaded} chercherListeFakemon={this.chercherListeFakemon} listeFakemon={this.state.listeFakemon} envoyerAlerte={this.envoyerAlerte} apikey={this.state.apikey} miseAjourSelection={this.miseAjourSelection} />]
+        }
+        else {
+            formulaireFakemon = [<CircularProgress key={0}/>];
+            listeFakemon = [<CircularProgress key={0}/>];
         }
         return (
             <div id="container">

@@ -11,7 +11,7 @@
 }
 
 #fakemonList {
-    max-Height: 20vh;
+    max-Height: 25vh;
     overflow: auto;
     padding: 1rem;
     margin-left: 1vw;
@@ -31,4 +31,10 @@
 
 .boutonListe {
     margin: 1rem!important;
+}
+
+@media only screen and (max-height: 760px) {
+    #fakemonList {
+        max-Height: 10vh;
+    }
 }

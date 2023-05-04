@@ -128,50 +128,7 @@ class FakemonForm extends Component {
 
     ajoutFakemon = (e) => {
         e.preventDefault();
-        this.setState({
-            isLoaded: false
-        });
-        api({
-            method: 'POST',
-            url: '/fakemon',
-            headers: {
-                Authorization: "apikey " + this.props.apikey
-            },
-            data: {
-                "nom": this.state.fakemon["nom"],
-                "id_type1": this.state.fakemon["id_type1"],
-                "id_type2": this.state.fakemon["id_type2"],
-                "hp": this.state.fakemon["hp"],
-                "atk": this.state.fakemon["atk"],
-                "def": this.state.fakemon["def"],
-                "sp_atk": this.state.fakemon["sp_atk"],
-                "sp_def": this.state.fakemon["sp_def"],
-                "speed": this.state.fakemon["speed"],
-                "description": this.state.fakemon["description"]
-            }
-        })
-            .then((resultat) => {
-                this.setState({
-                    fakemon: resultat.data["data"],
-                    isLoaded: true
-                });
-                this.props.envoyerAlerte("success", "L'ajout du fakemon a été réussi.");
-                this.props.ajoutFakemon(resultat.data["data"])
-            })
-            .catch((error) => {
-                if (error.response) {
-                    const dataError = error.response;
-                    if (dataError.status === 401) {
-                        this.props.envoyerAlerte("error", "Une erreur imprévue a survenu lors de l'ajout du fakemon.");
-                    }
-                    else if (dataError.status === 403) {
-                        this.props.envoyerAlerte("error", "Il y a eu une erreur lors de l'envoi de la clé api lors de l'ajout du fakemon.");
-                    }
-                    else if (dataError.status === 500) {
-                        this.props.envoyerAlerte("error", "Il y a eu un problème de communication avec l'api lors de l'ajout du fakemon. Veuillez réessayer plus tard.");
-                    }
-                }
-            })
+        this.props.ajoutFakemon(this.state.fakemon);
     }
 
     updateFakemon = (e) => {
@@ -180,6 +137,11 @@ class FakemonForm extends Component {
             isLoaded: false
         });
         this.props.modifierFakemon(this.state.fakemon);
+    }
+
+    deleteFakemon = (e) => {
+        e.preventDefault();
+        this.props.supprimerFakemon(this.state.fakemon);
     }
 
     resetForm = (e) => {
@@ -207,7 +169,7 @@ class FakemonForm extends Component {
         let fakemon = this.state.fakemon;
         apiNomFakemon({
             method: 'GET',
-            url: '/name/generate?category=pokemon&limit=1'
+            url: '/name/generate?category=pokemon'
         })
             .then((resultat) => {
                 fakemon["nom"] =  resultat.data["contents"]["names"][0];
@@ -247,7 +209,7 @@ class FakemonForm extends Component {
                         >
                             <Replay ></Replay>
                         </Button>
-                        <p id='avertissement'>Le générateur de nom fonctionne seulement pour 5 essais/24h,car il faut payer pour une clé api pour plus que ça.</p>
+                        <p id='avertissement'>Le générateur de nom fonctionne seulement pour 5 essais/heure à la limite de 60/jours,car il faut payer pour une clé api pour plus que ça.</p>
                         <br></br>
 
                         <FormControl variant='filled' className='type'>
@@ -410,7 +372,7 @@ class FakemonForm extends Component {
                         <Button variant="contained" size='medium' type='submit' className='boutonFormFakemon' onClick={this.updateFakemon}>Mise à jour</Button>
                         <Button variant="contained" size='medium' type='submit' className='boutonFormFakemon' onClick={this.ajoutFakemon}>Ajouter</Button>
                         <Button variant="contained" size='medium' type='submit' className='boutonFormFakemon' onClick={this.resetForm}>Recommencer</Button>
-                        <Button variant="contained" size='medium' type='submit' className='boutonFormFakemon'>Supprimer</Button>
+                        <Button variant="contained" size='medium' type='submit' className='boutonFormFakemon' onClick={this.deleteFakemon}>Supprimer</Button>
                     </form>
                 </div>
             );

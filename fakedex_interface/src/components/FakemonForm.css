@@ -11,8 +11,8 @@
 }
 
 .stats {
-    margin-top: 1vh!important;
-    margin-bottom: 3vh!important;
+    margin-top: 2vh!important;
+    margin-bottom: 2vh!important;
     margin-left: 2vw!important;
     margin-right: 2vw!important;
 }
@@ -20,7 +20,7 @@
 
 .stats-fin {
     margin-bottom: 2vh!important;
-}
+} 
 
 .stats-debut {
     margin-top: 2vh!important;
@@ -35,19 +35,52 @@
 }
 
 .type{
-    margin-top: 2.5vh!important;
-    margin-bottom: 1rem!important;
-    margin-left: 1rem!important;
-    margin-right: 1rem!important;
+    margin-left: 2rem!important;
+    margin-right: 2rem!important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
 }
 
 .boutonFormFakemon {
     margin-left: 1rem!important;
     margin-right: 1rem!important;
+    margin-top: 2vh!important;
 }
 
 #avertissement {
     font-size: x-small;
     font-weight: bold;
     color: darkred;
+}
+
+@media only screen and (max-height: 760px) {
+    .stats {
+        margin-top: 0.3vh!important;
+        margin-bottom: 0.3vh!important;
+        margin-left: 2vw!important;
+        margin-right: 2vw!important;
+    }
+    .type{
+        margin-left: 1rem!important;
+        margin-right: 1rem!important;
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .nomFakemon {
+        margin: auto!important;
+    }
+    .stats-fin {
+        margin-bottom: auto !important;
+        margin-top: auto !important;
+    } 
+    
+    .stats-debut {
+        margin-bottom: auto !important;
+        margin-top: auto !important;
+    }
+    .boutonFormFakemon {
+        margin-left: 1rem!important;
+        margin-right: 1rem!important;
+        margin-top: auto !important;
+    }
 }
