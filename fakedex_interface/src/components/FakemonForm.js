@@ -167,14 +167,14 @@ class FakemonForm extends Component {
     genererNomAleatoire = (e) => {
         e.preventDefault();
         let fakemon = this.state.fakemon;
-        let rng = (Math.floor(Math.random()*4)+1);
+        let rng = (Math.floor(Math.random()*5));
         console.log(rng)
         apiNomFakemon({
             method: 'GET',
-            url: '/name/generate?category=pokemon&limit='+ rng
+            url: '/name/generate?category=pokemon&limit=5'
         })
             .then((resultat) => {
-                fakemon["nom"] =  resultat.data["contents"]["names"][0];
+                fakemon["nom"] =  resultat.data["contents"]["names"][rng];
                 this.setState({
                     fakemon: fakemon
                 });

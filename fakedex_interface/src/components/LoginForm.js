@@ -141,7 +141,7 @@ class LoginForm extends Component {
                         helperText="Nombre de caractères maximum est de 200" inputProps={{ maxLength: 200 }} value={this.state.username}
                         onChange={this.setUsername} />
 
-                    <TextField id="formPassword" label="Password" variant="filled" className='usagerInfo' helperText="Le mot de passe"
+                    <TextField id="formPassword" type='password' label="Password" variant="filled" className='usagerInfo' helperText="Le mot de passe"
                         value={this.state.password} onChange={this.setPassword} />
 
                     <Grid container columnSpacing={2} id={"boutonForm"}>
